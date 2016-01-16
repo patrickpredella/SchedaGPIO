@@ -65,6 +65,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 		\subsubsection{DCDC Converter}\label{sec:dcdc}
 		Il DCDC è un componente che converte una tensione in continua in un'altra tensione in continua secondo i suoi parametri di datasheet.
 		L'alimentazione verrà formita da un alimentatore da 12VDC. Tuttavia la nostra scheda monta componentistica che richiede una alimentazione a 5VDC. Usiamo quindi un DCDC converter sia per abbassare la tensione a quella desiderata che per eliminare oscillazioni dovute a eventuali picchi in ingresso
+
 		Utilizziamo il componente LM2596. Un DCDC con Vin tra 10V e 40V e Vout stabilizzata a 5V con tolleranza \(<\)0.1\%, il che è tollerabile con tutti i nostri Absolute maximum ratings (5\(\pm\)0.005V).
 		Questo componente presenta pure una linea di Feedback in modo da poter regolare in closed-loop la tensione in uscita (nel caso in cui questa sia separata da un filtro per esempio).
 		Aggiungiamo quindi un condensatore in ingresso e un filtro in uscita per smorzare le tensioni entranti ed uscenti e quindi evitare eventuali glitch nelle alimentazioni dei componenti digitali.
@@ -121,10 +122,24 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 			\paragraph{Protezione ADC}
 				Nel caso dell'ADC vogliamo proteggere la porta da tensioni troppo alte. I max ratings sono a 5V, ma qualunque segnale con tensione maggiore di Vref non viene campionato correttamente,
 				infatti abbiamo un fenomeno di clipping a V\(<\)-Vref/PGA e a V\(>\)Vref/PGA. (con PGA = 1,2,4,8).
-				L'intervallo utile su cui misurare il segnale sono quindi delle tensioni con la tensione -2.048V\(<\)\textbf{V}\(<\)2.048V.\\
+				L'intervallo utile su cui misurare il segnale sono quindi delle tensioni con la tensione -2.048V\(<\)\textbf{V}\(<\)2.048V.
+				
 				Colleghiamo un diodo Zener con Vz=2.2V in inversa e in modo da evitare questo compito al microchip.
 				In questo caso la resistenza viene scelta per rispettare la massima corrente erogata, ma anche per scegliere condensatori più piccoli e quindi meno costosi.
 				La dimensioniamo ad 100k\(\Omega\). Per usare un C=1\(\mu\)F. In ogni caso i segnali che leggeremo trasportano pochissima corrente, quindi possiamo filtrare la corrente massima molto pesantemente.
+
+	\subsection{Specifiche da rispettare per il bus I\(^2\)C}
+
+		Il bus I\(^2\)C richiede pochissime specifiche: una tensione e una frequenze di funzionamento.
+		Nel nostro caso dobbiamo solamente scegliere la corretta resistenza di pull-up per la frequenza di funzionamento del bus.
+		In particolare utilizzeremo la velocità di trasmissione standard a 100kbit/s.
+		Per lo standard I\(^2\)C i bus di default stanno a Vdd. Serve quindi una R cosiddetta di pull-up che in un transitorio \(>\) della durata di 1 ciclo di clock riporti la tensione da gnd a Vdd.
+		Lo standard suggerisce che per pochi componenti sullo stesso bus, a velocità standard, una resistenza di 10K\(\Omega\) sia compatibile.
+		Utilizziamo quindi una resistenza da 10K\(\Omega\).
+
+		Il Raspberry ha già integrate delle resistenze di pull-up per il caso in cui lo si colleghi in I\(^2\)C ad altri componenti.
+		Nel caso in cui il segnale sia più pulito con l'alimentazione del bus provvista dal Raspberry, sarà sufficiente dissaldare le R\_pullup e il bus sarà scollegato dalla Vdd fornita dal DCDC.
+
 	\subsection{Schema elettrico d'assemblaggio}
 
 
