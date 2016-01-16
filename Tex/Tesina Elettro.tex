@@ -46,13 +46,15 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 
 
 \section{Componentistica}
-	\subsection{Cicuiteria Microchip utilizzata} %non mi ricordo la sigla dei componenti che hanno i piedini
+	\subsection{Cicuiteria Microchip utilizzata}
 
 		\subsubsection{ADC - Analog-to-Digital Converter}\label{sec:adc}
 		% Breve introduzione
 %		- Cos'è un ADC (genericamente) e come funziona (frequenza di campionamento, vref e breve cenno all campionamento differenziale)
 %		- L'MCP xxxx (nel dettaglio), schema, pin e loro descrizione, max ratings, PGO
 %		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
+		L'ADC è un dispositivo per la conversione di segnali analogici in segnali digitali, i suoi aspetti più importanti sono risoluzione e frequenza di campionamento.
+		La risoluzione è legata al numero di bit di memoria disponibili nel dispositivo e influenza la sua capacità di discernere segnali in ingresso simili tra loro mediante $2^{n-1}$ step di campionamento (con n pari al numeri di bit disponibili). La frequenza di campionamento invece influenza 
 
 		\subsubsection{DAC - Digital-to-Analog Converter}\label{sec:dac}
 		% Come per ADC
