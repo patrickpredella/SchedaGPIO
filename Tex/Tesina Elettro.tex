@@ -46,7 +46,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 
 
 \section{Componentistica}
-	\subsection{Cicuiteria Microchip utilizzata}
+	\subsection{Cicuiteria utilizzata}
 
 		\subsubsection{ADC - Analog-to-Digital Converter}\label{sec:adc}
 		% Breve introduzione
@@ -54,7 +54,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 %		- L'MCP xxxx (nel dettaglio), schema, pin e loro descrizione, max ratings, PGO
 %		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
 		L'ADC è un dispositivo per la conversione di segnali analogici in segnali digitali, i suoi aspetti più importanti sono risoluzione e frequenza di campionamento.
-		La risoluzione è legata al numero di bit di memoria disponibili nel dispositivo e influenza la sua capacità di discernere segnali in ingresso simili tra loro mediante $2^{n-1}$ step di campionamento (con n pari al numeri di bit disponibili). La frequenza di campionamento invece influenza 
+		La risoluzione è legata al numero di bit di memoria disponibili nel dispositivo e influenza la sua capacità di discernere segnali in ingresso simili tra loro mediante $2^{n-1}$ step di campionamento (con n pari al numeri di bit disponibili). La frequenza di campionamento invece influenza
 
 		\subsubsection{DAC - Digital-to-Analog Converter}\label{sec:dac}
 		% Come per ADC
@@ -62,8 +62,13 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 		\subsubsection{GP I/O - General Purpose Input/Output Device}\label{sec:gpio}
 		% Come per ADC
 
-	\subsection{Componenti Hardware}
-		\subsubsection{La scheda Piggy-Back e il DCDC Converter}\label{sec:piggy}
+		\subsubsection{DCDC Converter}\label{sec:dcdc}
+		Utilizziamo il componente LM2596. Un DCDC con Vin tra 10V e 40V e Vout stabilizzata a 5V con tolleranza \(<\)0.1\%, il che è tollerabile con tutti i nostri Absolute maximum ratings (5\(\pm\)0.005V).
+		Questo componente presenta pure una linea di Feedback in modo da poter regolare in closed-loop la tensione in uscita (nel caso in cui questa sia separata da un filtro per esempio).
+		Aggiungiamo quindi un condensatore in ingresso e un filtro in uscita per smorzare le tensioni entranti ed uscenti e quindi evitare eventuali glitch nelle alimentazioni dei componenti digitali.
+
+	\subsection{Ulteriori Componenti Hardware}
+		\subsubsection{La scheda Piggy-Back}\label{sec:piggy}
 		% Cos'è, perché la usiamo, cenni sul numero di pin sequenziali, compatibilità col Raspberry, montaggio Circuiteria
 		% - Il DCDC, schema e cenni sul closed-loop feedback -> garanzia di Vdd costante
 
