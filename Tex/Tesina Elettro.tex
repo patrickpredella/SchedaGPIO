@@ -93,7 +93,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 		Si tratta in entrambi i casi di filtri passa basso con 1 unico polo.
 			\paragraph{Filtro ADC}
 				L'ADC da specifiche si comporta come un passa basso a 5hz. Nel nostro caso vogliamo aggiungere un ulteriore polo in modo da \textbf{pre-filtrare} il segnale in ingresso.
-				Scegliamo quindi una frequenza di taglio \textbf{\(\le\)5Hz} (sopra alla quale in ogni caso il segnale non viene campionato correttamente).
+				Scegliamo quindi una frequenza di taglio \textbf{\(<\)5Hz} (sopra alla quale in ogni caso il segnale non viene campionato correttamente).
 				In particolare scegliamo una resistenza da 100k\(\Omega\) e un condensatore da 1\(\mu\)F per avere di conseguenza un taglio a 1.6Hz.
 			\paragraph{Filtro GPIO}
 				Per il GPIO il caso è diverso: ci serve un filtro in modo da evitare false letture dovute a picchi improvvisi e rumore e nel contempo asssicurare una buona reattività nel caso dell'attuazione
@@ -111,8 +111,8 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 				La resistenza viene scelta per rispettare la massima corrente erogata dal pin Imax=25mA. Con V=5V e Imax=25mA, Rmin=200\(\Omega\). La dimensioniamo ad 1k\(\Omega\).
 			\paragraph{Protezione ADC}
 				Nel caso dell'ADC vogliamo proteggere la porta da tensioni troppo alte. I max ratings sono a 5V, ma qualunque segnale con tensione maggiore di Vref non viene campionato correttamente,
-				infatti abbiamo un fenomeno di clipping a V\(\le\)-Vref/PGA e a V\(\ge\)Vref/PGA. (con PGA = 1,2,4,8).
-				L'intervallo utile su cui misurare il segnale sono quindi delle tensioni con la tensione -2.048V\(\le\)\textbf{V}\(\le\)2.048V.\\
+				infatti abbiamo un fenomeno di clipping a V\(<\)-Vref/PGA e a V\(>\)Vref/PGA. (con PGA = 1,2,4,8).
+				L'intervallo utile su cui misurare il segnale sono quindi delle tensioni con la tensione -2.048V\(<\)\textbf{V}\(<\)2.048V.\\
 				Colleghiamo un diodo Zener con Vz=2.2V in inversa e in modo da evitare questo compito al microchip.
 				In questo caso la resistenza viene scelta per rispettare la massima corrente erogata, ma anche per scegliere condensatori più piccoli e quindi meno costosi.
 				La dimensioniamo ad 100k\(\Omega\). Per usare un C=1\(\mu\)F. In ogni caso i segnali che leggeremo trasportano pochissima corrente, quindi possiamo filtrare la corrente massima molto pesantemente.
