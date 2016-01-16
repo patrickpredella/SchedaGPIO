@@ -1,0 +1,74 @@
+\documentclass[10pt]{article} 
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{geometry}
+\geometry{a4paper}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{paralist}
+\usepackage{verbatim}
+\usepackage{subfig}
+
+\usepackage{sectsty}
+
+\usepackage[titles,subfigure]{tocloft}
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+
+
+\title{Un titolo intelligente}
+\author{Patrick Predella MAT, Federico D'Eredità 151646 }
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduzione}
+% Breve spiegazione della finalità del progetto e metodo usato per giungere a tal fine
+
+\section{Componentistica}
+	\subsection{Cicuiteria XXX} %non mi ricordo la sigla dei componenti che hanno i piedini
+
+		\subsubsection{ADC - Analog-to-Digital Converter}
+		% Breve introduzione 
+%		- Cos'è un ADC (genericamente) e come funziona (frequenza di campionamento, vref e breve cenno all campionamento differenziale) 
+%		- L'MCP xxxx (nel dettaglio), schema, pin e loro descrizione, max ratings, PGO 
+%		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
+	
+		\subsubsection{DAC - Digital-to-Analog Converter}
+		% Come per ADC
+	
+		\subsubsection{GP I\O - General Purpose Input\Output Device}
+		% Come per ADC
+	
+	\subsection{Componenti Hardware}
+		\subsubsection{La scheda Piggy-Back e il DCDC Converter}
+		% Cos'è, perché la usiamo, cenni sul numero di pin sequenziali, compatibilità col Raspberry, montaggio Circuiteria
+		% - Il DCDC, schema e cenni sul closed-loop feedback -> garanzia di Vdd costante
+		
+		\subsubsection{Il Raspberry}
+		% Massimo 3 righe su cos'è giusto per avere una descrizione a prova di idiota
+		% - Collegamento e comunicazione col Piggy-Back
+		
+	\subsection{Il linguaggio di programmazione I2C}
+	% Breve cenno sull'I2C che viene usato per la comunicazione con la circuiteria
+
+\section{Realizzazione del Progetto}
+
+	\subsection{Protezione della componentistica}
+		\subsubsection{Filtri RC}
+		
+		\subsubsection{Diodi Zener}
+	
+	\subsection{Schemda elettrico d'assemblaggio}
+
+
+
+\end{document}
