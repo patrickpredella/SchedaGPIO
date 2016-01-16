@@ -1,4 +1,4 @@
-\documentclass[10pt]{article} 
+\documentclass[10pt]{article}
 
 \usepackage[utf8]{inputenc}
 
@@ -23,7 +23,7 @@
 \renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
 
 
-\title{Un titolo intelligente}
+\title{ADC DAC GPIO Board for Raspberry}
 \author{Patrick Predella MAT, Federico D'Eredità 151646 }
 \date{}
 
@@ -34,40 +34,77 @@
 % Breve spiegazione della finalità del progetto e metodo usato per giungere a tal fine
 
 \section{Componentistica}
-	\subsection{Cicuiteria XXX} %non mi ricordo la sigla dei componenti che hanno i piedini
+	\subsection{Cicuiteria Microchip utilizzata} %non mi ricordo la sigla dei componenti che hanno i piedini
 
 		\subsubsection{ADC - Analog-to-Digital Converter}
-		% Breve introduzione 
-%		- Cos'è un ADC (genericamente) e come funziona (frequenza di campionamento, vref e breve cenno all campionamento differenziale) 
-%		- L'MCP xxxx (nel dettaglio), schema, pin e loro descrizione, max ratings, PGO 
-%		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
-	
+		% Breve introduzione
+		%		- Cos'è un ADC (genericamente) e come funziona (frequenza di campionamento, vref e breve cenno all campionamento differenziale)
+		%		- L'MCP xxxx (nel dettaglio), schema, pin e loro descrizione, max ratings, PGO
+		%		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
+
 		\subsubsection{DAC - Digital-to-Analog Converter}
 		% Come per ADC
-	
+
 		\subsubsection{GP I\O - General Purpose Input\Output Device}
 		% Come per ADC
-	
+
 	\subsection{Componenti Hardware}
 		\subsubsection{La scheda Piggy-Back e il DCDC Converter}
 		% Cos'è, perché la usiamo, cenni sul numero di pin sequenziali, compatibilità col Raspberry, montaggio Circuiteria
 		% - Il DCDC, schema e cenni sul closed-loop feedback -> garanzia di Vdd costante
-		
+
 		\subsubsection{Il Raspberry}
 		% Massimo 3 righe su cos'è giusto per avere una descrizione a prova di idiota
 		% - Collegamento e comunicazione col Piggy-Back
-		
+
 	\subsection{Il linguaggio di programmazione I2C}
 	% Breve cenno sull'I2C che viene usato per la comunicazione con la circuiteria
 
 \section{Realizzazione del Progetto}
+		Il progetto è molto semplice. Si tratta di:
+		\begin{itemize}
+		        \item utilizzare il DCDC converter per stabilizzare l'alimentazione dei componenti.
+		        \item portare le piste a degli header in modo che siano accessibili al Raspberry
+		        \item proteggere le linee in ingresso e in uscita in modo che non si danneggino i componenti
+		\end{itemize}
 
 	\subsection{Protezione della componentistica}
+		Si tratta di rispettare le specifiche di absolute maximum ratings, proteggere le linee in ingresso e in uscita da ingressi \textbf{out of range} e \textbf{ridurre i rumori}.
+		In particolare un filtro per i rumori nel caso dell'ADC, un filtro per avere un transitorio non nullo nel caso dei GPIO e in tutti e tre i casi una protezione contro ingressi alti e per rientrare negli Absolute Maximum ratings nel caso di collegamento dei pin di output a massa (caso peggiore).
+		(Vedi lo schematico delle parti: RASP\_GPIO\_DAC\_ADC\_PARTS.pdf)
 		\subsubsection{Filtri RC}
-		
-		\subsubsection{Diodi Zener}
-	
-	\subsection{Schemda elettrico d'assemblaggio}
+		Abbiamo disegnato due filtri RC:
+		\begin{itemize}
+		        \item Filtro ADC.
+		        \item Filtro GPIO
+		\end{itemize}
+		Si tratta in entrambi i casi di filtri passa basso con 1 unico polo.
+			\paragraph{Filtro ADC}
+				L'ADC da specifiche si comporta come un passa basso a 5hz. Nel nostro caso vogliamo aggiungere un ulteriore polo in modo da \textbf{pre-filtrare} il segnale in ingresso.
+				Scegliamo quindi una frequenza di taglio \textbf{\(\le\)5Hz} (sopra alla quale in ogni caso il segnale non viene campionato correttamente).
+				In particolare scegliamo una resistenza da 100k\(\Omega\) e un condensatore da 1\(\mu\)F per avere di conseguenza un taglio a 1.6Hz.
+			\paragraph{Filtro GPIO}
+				Per il GPIO il caso è diverso: ci serve un filtro in modo da evitare false letture dovute a picchi improvvisi e rumore e nel contempo asssicurare una buona reattività nel caso dell'attuazione
+				Dimensioniamo il filtro a partire dalla resistenza che deve soddisfare la massima corrente di drain dal piedino descritta negli \textbf{Absolute Maximum Ratings}.
+				Abbiamo quindi Imax=25mA, Vmax=5V. Rmin deve quindi essere Rmin=200\(\Omega\). La dimensioniamo ad 1k\(\Omega\) e siamo sicuri di essere nei ratings.
+				Scegliamo una C=1\(\mu\)F per avere di conseguenza un taglio a 160Hz. La porta ha quindi una \(\tau\)=1ms di risposta naturale, che è accettabile nel nostro caso perché nel caso peggiore la commutazione del valore binario avviene intorno ai 2ms.
+		\subsubsection{Protezioni V e I}
+		Ci serve un sistema per impedire alla tensione di salire oltre ad una certa soglia in modo da non danneggiare i microchip. utilizziamo quindi dei diodi zener che scaricano a massa le tensioni in ingresso.
+		Si noti che le usiamo anche nel caso dei DAC per proteggere la porta nel caso in cui venga collegata erroneamente.
+			\paragraph{Protezione DAC}
+				Nel caso del DAC vogliamo proteggere la porta da tensioni troppo alte. Al massimo il DAC da Vout=Vdd=5V. Colleghiamo un diodo Zener con Vz=5.1V in inversa e qualunque tensione maggiore di 5.1 verrà scaricata dal componente.
+				La resistenza viene scelta per rispettare la massima corrente erogata dal pin Imax=25mA. Con V=5V e Imax=25mA, Rmin=200\(\Omega\). La dimensioniamo ad 1k\(\Omega\).
+			\paragraph{Protezione GPIO}
+				Pure nel caso del GPIO vogliamo proteggere la porta da tensioni troppo alte. Al massimo il GPIO da Vout=Vdd=5V. Colleghiamo un diodo Zener con Vz=5.1V in inversa e qualunque tensione maggiore di 5.1 verrà scaricata dal componente.
+				La resistenza viene scelta per rispettare la massima corrente erogata dal pin Imax=25mA. Con V=5V e Imax=25mA, Rmin=200\(\Omega\). La dimensioniamo ad 1k\(\Omega\).
+			\paragraph{Protezione ADC}
+				Nel caso dell'ADC vogliamo proteggere la porta da tensioni troppo alte. I max ratings sono a 5V, ma qualunque segnale con tensione maggiore di Vref non viene campionato correttamente,
+				infatti abbiamo un fenomeno di clipping a V\(\le\)-Vref/PGA e a V\(\ge\)Vref/PGA. (con PGA = 1,2,4,8).
+				L'intervallo utile su cui misurare il segnale sono quindi delle tensioni con la tensione -2.048V\(\le\)\textbf{V}\(\le\)2.048V.\\
+				Colleghiamo un diodo Zener con Vz=2.2V in inversa e in modo da evitare questo compito al microchip.
+				In questo caso la resistenza viene scelta per rispettare la massima corrente erogata, ma anche per scegliere condensatori più piccoli e quindi meno costosi.
+				La dimensioniamo ad 100k\(\Omega\). Per usare un C=1\(\mu\)F. In ogni caso i segnali che leggeremo trasportano pochissima corrente, quindi possiamo filtrare la corrente massima molto pesantemente.
+	\subsection{Schema elettrico d'assemblaggio}
 
 
 
