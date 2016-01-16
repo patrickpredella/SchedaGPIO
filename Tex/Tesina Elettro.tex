@@ -1,6 +1,7 @@
 \documentclass[10pt]{article} 
-
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
 
 \usepackage{geometry}
 \geometry{a4paper}
@@ -29,35 +30,46 @@
 
 \begin{document}
 \maketitle
+\tableofcontents
 
 \section{Introduzione}
 % Breve spiegazione della finalità del progetto e metodo usato per giungere a tal fine
+Finalità del progetto è il monitoraggio di misure di temperatura e pressione ambientali mediante sensoristica analogica con la possibilità di comandare attuatori analogici e/o digitali tramite programmazione di un Raspberrt Pi2+.
+A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti elementi principali:
+\begin{itemize}
+\item Un convertitore analogico-digitale per il campionamento dei segnali analogici di temperatura e pressione affiancato da una protezione per eventuali sbalzi di tensione;
+\item Un convertitore digitale-analogico per il controllo di attuatori analogici anch'esso affiancato da una protezione per eventuali sbalzi di tensione;
+\item Un general purpose input/output per il controllo di attuatori digitali ed il controllo delle operazioni pre-programmate nel Raspberry;
+\item Scheda PiggyBack (vedasi capitolo \ref{sec:piggy}) per l'assemblaggio della componentistica;
+\item Un Raspberry Pi2+ per il controllo delle linee dati, di clock e l'interazione con il GPI/O.
+\end{itemize}
+
 
 \section{Componentistica}
 	\subsection{Cicuiteria XXX} %non mi ricordo la sigla dei componenti che hanno i piedini
 
-		\subsubsection{ADC - Analog-to-Digital Converter}
+		\subsubsection{ADC - Analog-to-Digital Converter}\label{sec:adc}
 		% Breve introduzione 
 %		- Cos'è un ADC (genericamente) e come funziona (frequenza di campionamento, vref e breve cenno all campionamento differenziale) 
 %		- L'MCP xxxx (nel dettaglio), schema, pin e loro descrizione, max ratings, PGO 
 %		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
 	
-		\subsubsection{DAC - Digital-to-Analog Converter}
+		\subsubsection{DAC - Digital-to-Analog Converter}\label{sec:dac}
 		% Come per ADC
 	
-		\subsubsection{GP I\O - General Purpose Input\Output Device}
+		\subsubsection{GP I/O - General Purpose Input/Output Device}\label{sec:gpio}
 		% Come per ADC
 	
 	\subsection{Componenti Hardware}
-		\subsubsection{La scheda Piggy-Back e il DCDC Converter}
+		\subsubsection{La scheda Piggy-Back e il DCDC Converter}\label{sec:piggy}
 		% Cos'è, perché la usiamo, cenni sul numero di pin sequenziali, compatibilità col Raspberry, montaggio Circuiteria
 		% - Il DCDC, schema e cenni sul closed-loop feedback -> garanzia di Vdd costante
 		
-		\subsubsection{Il Raspberry}
+		\subsubsection{Il Raspberry}\label{sec:rasp}
 		% Massimo 3 righe su cos'è giusto per avere una descrizione a prova di idiota
 		% - Collegamento e comunicazione col Piggy-Back
 		
-	\subsection{Il linguaggio di programmazione I2C}
+	\subsection{Il linguaggio di programmazione I2C}\label{sec:i2c}
 	% Breve cenno sull'I2C che viene usato per la comunicazione con la circuiteria
 
 \section{Realizzazione del Progetto}
@@ -67,7 +79,7 @@
 		
 		\subsubsection{Diodi Zener}
 	
-	\subsection{Schemda elettrico d'assemblaggio}
+	\subsection{Schema elettrico d'assemblaggio}
 
 
 
