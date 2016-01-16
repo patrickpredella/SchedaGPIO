@@ -55,7 +55,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 %		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
 		L'ADC è un dispositivo per la conversione di segnali analogici in segnali digitali, i suoi aspetti più importanti sono risoluzione e frequenza di campionamento.
 		La risoluzione è legata al numero di bit di memoria disponibili nel dispositivo e influenza la sua capacità di discernere segnali in ingresso simili tra loro mediante $2^{n-1}$ step di campionamento (con n pari al numeri di bit disponibili). La frequenza di campionamento invece determina in che misura la conversione segua fedelmente l'andamento nel tempo del segnale di ingresso. Come noto dal teorema di Shannon la frequenza di campionamento deve essere almeno più del doppio della frequenza del segnale ingresso, nel caso in esame comunque i segnali di temperatura e pressione essento riferiti a misure ambientali hanno frenquenze molto basse.
-		
+
 		Nel nostro progetto utilizziamo un MCP3428 della Microchip Technology Inc. caratterizzato da una frequenza di lavoro a 100 kHz, 400 kHz o 3.4 MHz (nella nostra applicazione imposteremo 100 kHz) ed una risoluzione a 16bit e 4 canali d'ingresso. In figura \ref{fig:adc} è possibile vedere una schematizzazione a blocchi del funzionamento dell'ADC in uso.
 		\begin{figure}[h]
 		\centering

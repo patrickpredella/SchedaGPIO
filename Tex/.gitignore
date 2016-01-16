@@ -1,5 +1,6 @@
-*.aux
-*.log
-*.gz
-*.toc
-*.pdf
+*
+!*.tex
+!.gitignore
+!*.jpg
+!*.png
+!/src
