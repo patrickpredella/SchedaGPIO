@@ -14,4 +14,4 @@
 \contentsline {subsection}{\numberline {3.1}Protezione della componentistica}{2}
 \contentsline {subsubsection}{\numberline {3.1.1}Filtri RC}{2}
 \contentsline {subsubsection}{\numberline {3.1.2}Diodi Zener}{2}
-\contentsline {subsection}{\numberline {3.2}Schemda elettrico d'assemblaggio}{2}
+\contentsline {subsection}{\numberline {3.2}Schema elettrico d'assemblaggio}{2}
