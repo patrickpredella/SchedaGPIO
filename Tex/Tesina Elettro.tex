@@ -54,8 +54,14 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 %		- L'MCP xxxx (nel dettaglio), schema, pin e loro descrizione, max ratings, PGO
 %		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
 		L'ADC è un dispositivo per la conversione di segnali analogici in segnali digitali, i suoi aspetti più importanti sono risoluzione e frequenza di campionamento.
-		La risoluzione è legata al numero di bit di memoria disponibili nel dispositivo e influenza la sua capacità di discernere segnali in ingresso simili tra loro mediante $2^{n-1}$ step di campionamento (con n pari al numeri di bit disponibili). La frequenza di campionamento invece influenza
-
+		La risoluzione è legata al numero di bit di memoria disponibili nel dispositivo e influenza la sua capacità di discernere segnali in ingresso simili tra loro mediante $2^{n-1}$ step di campionamento (con n pari al numeri di bit disponibili). La frequenza di campionamento invece determina in che misura la conversione segua fedelmente l'andamento nel tempo del segnale di ingresso. Come noto dal teorema di Shannon la frequenza di campionamento deve essere almeno più del doppio della frequenza del segnale ingresso, nel caso in esame comunque i segnali di temperatura e pressione essento riferiti a misure ambientali hanno frenquenze molto basse.
+		
+		Nel nostro progetto utilizziamo un MCP3428 della Microchip Technology Inc. caratterizzato da una frequenza di lavoro a 100 kHz, 400 kHz o 3.4 MHz (nella nostra applicazione imposteremo 100 kHz) ed una risoluzione a 16bit e 4 canali d'ingresso. In figura \ref{fig:adc} è possibile vedere una schematizzazione a blocchi del funzionamento dell'ADC in uso.
+		\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\textwidth]{src/adc_block}
+		\caption{Schema a blocchi dell'ADC}\label{fig:adc}
+		\end{figure}
 		\subsubsection{DAC - Digital-to-Analog Converter}\label{sec:dac}
 		% Come per ADC
 
@@ -125,6 +131,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 				Colleghiamo un diodo Zener con Vz=2.2V in inversa e in modo da evitare questo compito al microchip.
 				In questo caso la resistenza viene scelta per rispettare la massima corrente erogata, ma anche per scegliere condensatori più piccoli e quindi meno costosi.
 				La dimensioniamo ad 100k\(\Omega\). Per usare un C=1\(\mu\)F. In ogni caso i segnali che leggeremo trasportano pochissima corrente, quindi possiamo filtrare la corrente massima molto pesantemente.
+				
 	\subsection{Schema elettrico d'assemblaggio}
 
 
