@@ -2,7 +2,7 @@
 \select@language {italian}
 \contentsline {section}{\numberline {1}Introduzione}{1}
 \contentsline {section}{\numberline {2}Componentistica}{2}
-\contentsline {subsection}{\numberline {2.1}Cicuiteria XXX}{2}
+\contentsline {subsection}{\numberline {2.1}Cicuiteria Microchip utilizzata}{2}
 \contentsline {subsubsection}{\numberline {2.1.1}ADC - Analog-to-Digital Converter}{2}
 \contentsline {subsubsection}{\numberline {2.1.2}DAC - Digital-to-Analog Converter}{2}
 \contentsline {subsubsection}{\numberline {2.1.3}GP I/O - General Purpose Input/Output Device}{2}
@@ -13,5 +13,10 @@
 \contentsline {section}{\numberline {3}Realizzazione del Progetto}{2}
 \contentsline {subsection}{\numberline {3.1}Protezione della componentistica}{2}
 \contentsline {subsubsection}{\numberline {3.1.1}Filtri RC}{2}
-\contentsline {subsubsection}{\numberline {3.1.2}Diodi Zener}{2}
-\contentsline {subsection}{\numberline {3.2}Schemda elettrico d'assemblaggio}{2}
+\contentsline {paragraph}{Filtro ADC}{2}
+\contentsline {paragraph}{Filtro GPIO}{3}
+\contentsline {subsubsection}{\numberline {3.1.2}Protezioni V e I}{3}
+\contentsline {paragraph}{Protezione DAC}{3}
+\contentsline {paragraph}{Protezione GPIO}{3}
+\contentsline {paragraph}{Protezione ADC}{3}
+\contentsline {subsection}{\numberline {3.2}Schema elettrico d'assemblaggio}{3}
