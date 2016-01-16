@@ -63,6 +63,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 		% Come per ADC
 
 		\subsubsection{DCDC Converter}\label{sec:dcdc}
+		Il DCDC è un componente che converte una tensione in continua in un'altra tensione in continua secondo i suoi parametri di datasheet.
 		L'alimentazione verrà formita da un alimentatore da 12VDC. Tuttavia la nostra scheda monta componentistica che richiede una alimentazione a 5VDC. Usiamo quindi un DCDC converter sia per abbassare la tensione a quella desiderata che per eliminare oscillazioni dovute a eventuali picchi in ingresso
 		Utilizziamo il componente LM2596. Un DCDC con Vin tra 10V e 40V e Vout stabilizzata a 5V con tolleranza \(<\)0.1\%, il che è tollerabile con tutti i nostri Absolute maximum ratings (5\(\pm\)0.005V).
 		Questo componente presenta pure una linea di Feedback in modo da poter regolare in closed-loop la tensione in uscita (nel caso in cui questa sia separata da un filtro per esempio).
