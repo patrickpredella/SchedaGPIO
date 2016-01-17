@@ -35,7 +35,7 @@
 \tableofcontents
 
 \section{Introduzione}
-Finalità del progetto è il monitoraggio di misure di temperatura e pressione ambientali mediante sensoristica analogica con la possibilità di comandare attuatori analogici e/o digitali tramite programmazione di un Raspberrt Pi2+.
+Finalità del progetto è il monitoraggio di misure di temperatura e pressione ambientali mediante sensoristica analogica con la possibilità di comandare attuatori analogici e/o digitali tramite programmazione di un Raspberry Pi2+.
 A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti elementi principali:
 \begin{itemize}
 \item Un convertitore analogico-digitale per il campionamento dei segnali analogici di temperatura e pressione affiancato da una protezione per eventuali sbalzi di tensione;
@@ -59,10 +59,10 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 			\includegraphics[width=0.8\textwidth]{src/adc_block}
 			\caption{Schema a blocchi dell'ADC}\label{fig:adc}
 		\end{figure}
-		
-		L'MCP3428 disponde di una sua Vref interna, modificabile tramite il settagio del PGA mediante la relazione $V_{ref}=V_{ref-base}/PGA$, nello specifico del nostro progetto impostiamo il PGA (Programmable Gain Amplifier) a 1x.
-		
-		
+
+		L'MCP3428 dispone di una sua Vref interna, modificabile tramite il settagio del PGA mediante la relazione $V_{ref}=V_{ref-base}/PGA$, nello specifico del nostro progetto impostiamo il PGA (Programmable Gain Amplifier) a 1x.
+
+
 		\subsubsection{DAC - Digital-to-Analog Converter}\label{sec:dac}
 		Il DAC è un dispositivo per la conversione di segnali digitali in segnali analogici, è concettualmente l'opposto dell'ADC visto precedentemente.
 		Nel nostro progetto utilizziamo un MCP4728 della Microchip Technology Inc. le cui specifiche tecniche sono comparabili con quelle dell'MCP3428 se non per ilfunzionamento. Dato uno stream di dati in ingresso ne viene ricostruito l'andamento in tensione analogica  mediante un sincronizzatore, quest'ultimo per evitare che la tensione generata abbia un andamento ad impulsi viene affiancato da dei latch di tensione che permettono di realizzare un'andamento continuo di tensione senza sbalzi.
@@ -81,10 +81,10 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 			\caption{Schema del GPIO}\label{fig:gpio}
 			\vspace{-10pt}
 		\end{wrapfigure}
-		Il GP I/O è un dispositivo digitale che disponde di diverse linee che possono fungere sia da canali di input che di output in base ai comandi I\(^2\)C impartiti dal controllore master (nel nostro caso il Raspberry). Il GP I/O permette quindi di trasmettere e ricevere comandi digitali a/da interruttori, attuatori digitali e simili, un esempio pratico può essere il controllo remoto del Raspberry mediante interruttori che possono attivvare/disattivare funzioni pre-programmate, scegliere da quale ADC stare in ascolto, o quale DAC attivare ecc. L'uso di un GP I/O può spaziare a fantasia. Nel nostro progetto utilizziamo un MCP23008 che disponde di 8bit configurabili tramite I\(^2\)C come input/ouput.
+		Il GP I/O è un dispositivo digitale che dispone di diverse linee che possono fungere sia da canali di input che di output in base ai comandi I\(^2\)C impartiti dal controllore master (nel nostro caso il Raspberry). Il GP I/O permette quindi di trasmettere e ricevere comandi digitali a/da interruttori, attuatori digitali e simili, un esempio pratico può essere il controllo remoto del Raspberry mediante interruttori che possono attivvare/disattivare funzioni pre-programmate, scegliere da quale ADC stare in ascolto, o quale DAC attivare ecc. L'uso di un GP I/O può spaziare a fantasia. Nel nostro progetto utilizziamo un MCP23008 che dispone di 8bit configurabili tramite I\(^2\)C come input/ouput.
 
-		
-		
+
+
 \newpage
 		\subsubsection{DCDC Converter}\label{sec:dcdc}
 		Il DCDC è un componente che converte una tensione in continua in un'altra tensione in continua secondo i suoi parametri di datasheet.
@@ -92,11 +92,11 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=0.8\textwidth]{src/dcdc_scheme}
-			\caption{Schema del DCDC}\label{fig:dcdc}
+			\caption{Schema del DCDC completo di filtro stabilizzatore In e Out}\label{fig:dcdc}
 		\end{figure}
-		
+
 		Nel nostro progetto utilizziamo un LM2596, un DCDC converter con Vin tra 10V e 40V e Vout stabilizzata a 5V con tolleranza \(<\)0.1\%, più che sufficente per rispettare la compatibilità con gli Absolute maximum ratings dei nostri componenti (5\(\pm\)0.005V).
-		L'LM2596 per un'efficace stabilizzazione della tensione in uscita disponde di una closed-loop feedback (nel caso in cui questa sia separata da un filtro per esempio), dispone inoltre di un condensatore in ingresso e un filtro in uscita per smorzare eventuali sovra-tensioni (entranti ed uscenti) evitando quindi glitch nell'alimentazioni dei componenti digitali.
+		L'LM2596 per un'efficace stabilizzazione della tensione in uscita dispone di una closed-loop feedback (nel caso in cui questa sia separata da un filtro per esempio), dispone inoltre di un condensatore in ingresso e un filtro in uscita per smorzare eventuali sovra-tensioni (entranti ed uscenti) evitando quindi glitch nell'alimentazioni dei componenti digitali.
 
 	\subsection{Ulteriori Componenti Hardware}
 		\subsubsection{La scheda Piggy-Back}\label{sec:piggy}
@@ -126,20 +126,20 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 
 	\subsection{Protezione della componentistica}
 		Tutti i componenti descritti fin'ora hanno, ovviamente, dei limiti costruttivi sulle tensioni e le correnti che vi possono fluire. Per rientrare nei parametri massimi consentiti (Absolute Maximum Ratings) dobbiamo realizzare delle protezioni sulle linee in ingresso e in uscita da valori \textbf{out of range} e inoltre per \textbf{ridurre i rumori}.
-		In particolare realizziamo un filtro per i rumori per l'ADC, un filtro per avere un transitorio non nullo nel caso dei GPIO e per tutti e tre i componenti principali (GPIO, ADC e DAC) una protezione contro ingressi troppo alti e per rientrare negli Absolute Maximum ratings nel caso di collegamento dei pin di output a massa (caso peggiore).
-		(Vedasi lo schematico delle parti: RASP\_GPIO\_DAC\_ADC\_PARTS.pdf)
-		
+		In particolare realizziamo un filtro per i rumori per l'ADC, un filtro per avere un transitorio non nullo nel caso dei GPIO e per tutti e tre gli integrati (GPIO, ADC e DAC) una protezione contro ingressi troppo alti e per rientrare negli Absolute Maximum ratings nel caso di collegamento dei pin di output a massa (caso peggiore).
+		(Vedasi l'appendice corrispondente)
+
 		\subsubsection{Filtri RC}
 		Abbiamo disegnato due filtri RC:
 		\begin{itemize}
 		        \item Un filtro per l'ADC;
 		        \item Un filtro per il GPIO.
 		\end{itemize}
-		
+
 		Si tratta in entrambi i casi di filtri passa basso ad 1 polo.
-		
+
 			\paragraph{Filtro ADC}
-				L'ADC già di per sé secondo le sue specifiche si comporta come un passa basso a 5hz, nel nostro caso vogliamo aggiungere un ulteriore polo in modo da \textbf{pre-filtrare} il segnale in ingresso.
+				L'ADC già di per sé secondo le sue specifiche si comporta come un passa basso a 5Hz, nel nostro caso vogliamo aggiungere un ulteriore polo in modo da \textbf{pre-filtrare} il segnale in ingresso.
 				Scegliamo quindi una frequenza di taglio \textbf{\(<\)5Hz} (soglia oltre la quale ogni caso il segnale non verrebbe campionato correttamente).
 				In particolare scegliamo una resistenza da 100k\(\Omega\) e un condensatore da 1\(\mu\)F per avere di conseguenza un taglio a 1.6Hz.
 			\paragraph{Filtro GPIO}
@@ -148,7 +148,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 				Abbiamo quindi Imax=25mA, Vmax=5V. Rmin deve quindi essere Rmin=200\(\Omega\). La dimensioniamo ad 1k\(\Omega\) e siamo sicuri di essere nei ratings.
 				Scegliamo una C=1\(\mu\)F per avere di conseguenza un taglio a 160Hz. La porta ha quindi una \(\tau\)=1ms di risposta naturale, che nella nostra applicazione è accetabile in quanto nel caso peggiore la commutazione del valore binario avviene intorno ai 2ms.
 		\subsubsection{Protezioni V e I}
-		Ci serve un sistema per impedire alla tensione di salire oltre ad una certa soglia in modo da non danneggiare i microchip. utilizziamo quindi dei diodi zener che scaricano a massa le tensioni in ingresso.
+		Ci serve un sistema per impedire alla tensione di salire oltre ad una certa soglia in modo da non danneggiare i microchip. utilizziamo quindi dei diodi Zener che scaricano a massa le tensioni in ingresso.
 		Si noti che le usiamo anche nel caso dei DAC per proteggere la porta nel caso in cui venga collegata erroneamente.
 			\paragraph{Protezione DAC}
 				Nel caso del DAC vogliamo proteggere la porta da tensioni troppo alte. Al massimo il DAC da Vout=Vdd=5V. Colleghiamo un diodo Zener con Vz=5.1V in inversa e qualunque tensione maggiore di 5.1 verrà scaricata dal componente.
@@ -160,7 +160,7 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 				Nel caso dell'ADC vogliamo proteggere la porta da tensioni troppo alte. I max ratings sono a 5V, ma qualunque segnale con tensione maggiore di Vref non viene campionato correttamente,
 				infatti abbiamo un fenomeno di clipping a V\(<\)-Vref/PGA e a V\(>\)Vref/PGA. (con PGA = 1,2,4,8).
 				L'intervallo utile su cui misurare il segnale sono quindi delle tensioni con la tensione -2.048V\(<\)\textbf{V}\(<\)2.048V.
-				
+
 				Colleghiamo un diodo Zener con Vz=2.2V in inversa e in modo da evitare questo compito al microchip.
 				In questo caso la resistenza viene scelta per rispettare la massima corrente erogata, ma anche per scegliere condensatori più piccoli e quindi meno costosi.
 				La dimensioniamo ad 100k\(\Omega\). Per usare un C=1\(\mu\)F. In ogni caso i segnali che leggeremo trasportano pochissima corrente, quindi possiamo filtrare la corrente massima molto pesantemente.
@@ -168,12 +168,12 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 
 	\subsection{Specifiche da rispettare per il bus I\(^2\)C}
 
-		Il bus I\(^2\)C richiede pochissime specifiche: una tensione e una frequenze di funzionamento.
+		Il bus I\(^2\)C richiede pochissime specifiche: una tensione e una frequenza di funzionamento.
 		Nel nostro caso dobbiamo solamente scegliere la corretta resistenza di pull-up per la frequenza di funzionamento del bus.
 		In particolare utilizzeremo la velocità di trasmissione standard a 100kbit/s.
-		Per lo standard I\(^2\)C i bus di default stanno a Vdd. Serve quindi una R cosiddetta di pull-up che in un transitorio \(>\) della durata di 1 ciclo di clock riporti la tensione da gnd a Vdd.
+		Per lo standard I\(^2\)C i bus di default devono essere di tipo \emph{open-drain}, quindi normalizzati a Vdd. Serve quindi una R cosiddetta di pull-up che in un transitorio circa uguale alla durata di 1 ciclo di clock riporti la tensione da gnd a Vdd.
 		Lo standard suggerisce che per pochi componenti sullo stesso bus, a velocità standard, una resistenza di 10K\(\Omega\) sia compatibile.
-		Utilizziamo quindi una resistenza da 10K\(\Omega\).
+		Utilizziamo quindi resistenze da 10K\(\Omega\).
 
 		Il Raspberry ha già integrate delle resistenze di pull-up per il caso in cui lo si colleghi in I\(^2\)C ad altri componenti.
 		Nel caso in cui il segnale sia più pulito con l'alimentazione del bus provvista dal Raspberry, sarà sufficiente dissaldare le R\_pullup e il bus sarà scollegato dalla Vdd fornita dal DCDC.
@@ -189,19 +189,19 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 \section{Appendice}
 \subsection{Appendice A - Scheda tecnica ADC}
 		\includepdf[pages={5},noautoscale=true, offset=0 0]{../Specs/MCP3428}
-		
+
 \newpage
 \subsection{Appendice B - Scheda tecnica DAC}
 		\includepdf[pages={3},noautoscale=true, offset=0 0]{../Specs/MCP4728}
-		
+
 \newpage
 \subsection{Appendice C - Scheda tecnica GPIO}
 	\includepdf[pages={23},noautoscale=true, offset=0 0]{../Specs/MCP23008}
-	
+
 \newpage
 \subsection{Appendice D - Scheda tecnica DCDC}
 	\includepdf[pages={2},noautoscale=true, offset=0 0]{../Specs/LM2596}
-	
+
 \newpage
 \subsection{Appendice E - Eagle Project parts}
 	\includepdf[pages={1},noautoscale=true, offset=0 0,angle=-90]{../PDF_generated/RASP_GPIO_DAC_ADC_PARTS}
