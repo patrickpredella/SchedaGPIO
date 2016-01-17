@@ -18,6 +18,7 @@
 \usepackage{verbatim}
 \usepackage{subfig}
 \usepackage{wrapfig}
+\usepackage{pdfpages}
 
 \usepackage{sectsty}
 
@@ -34,7 +35,6 @@
 \tableofcontents
 
 \section{Introduzione}
-% Breve spiegazione della finalità del progetto e metodo usato per giungere a tal fine
 Finalità del progetto è il monitoraggio di misure di temperatura e pressione ambientali mediante sensoristica analogica con la possibilità di comandare attuatori analogici e/o digitali tramite programmazione di un Raspberrt Pi2+.
 A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti elementi principali:
 \begin{itemize}
@@ -50,10 +50,6 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 	\subsection{Cicuiteria utilizzata}
 
 		\subsubsection{ADC - Analog-to-Digital Converter}\label{sec:adc}
-		% Breve introduzione
-%		- Cos'è un ADC (genericamente) e come funziona (frequenza di campionamento, vref e breve cenno all campionamento differenziale)
-%		- L'MCP xxxx (nel dettaglio), schema, pin e loro descrizione, max ratings, PGO
-%		- Come NOI lo colleghiamo ai sensori, spiegazione Ch+ Ch- e perchè è un campionamento differenziale.
 		L'ADC è un dispositivo per la conversione di segnali analogici in segnali digitali, i suoi aspetti più importanti sono risoluzione e frequenza di campionamento.
 		La risoluzione è legata al numero di bit di memoria disponibili nel dispositivo e influenza la sua capacità di discernere segnali in ingresso simili tra loro mediante $2^{n-1}$ step di campionamento (con n pari al numeri di bit disponibili). La frequenza di campionamento invece determina in che misura la conversione segua fedelmente l'andamento nel tempo del segnale di ingresso. Come noto dal teorema di Shannon la frequenza di campionamento deve essere almeno più del doppio della frequenza del segnale ingresso, nel caso in esame comunque i segnali di temperatura e pressione essento riferiti a misure ambientali hanno frenquenze molto basse.
 
@@ -99,50 +95,58 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 			\caption{Schema del DCDC}\label{fig:dcdc}
 		\end{figure}
 		
-		Utilizziamo il componente LM2596. Un DCDC con Vin tra 10V e 40V e Vout stabilizzata a 5V con tolleranza \(<\)0.1\%, il che è tollerabile con tutti i nostri Absolute maximum ratings (5\(\pm\)0.005V).
-		Questo componente presenta pure una linea di Feedback in modo da poter regolare in closed-loop la tensione in uscita (nel caso in cui questa sia separata da un filtro per esempio).
-		Aggiungiamo quindi un condensatore in ingresso e un filtro in uscita per smorzare le tensioni entranti ed uscenti e quindi evitare eventuali glitch nelle alimentazioni dei componenti digitali.
+		Nel nostro progetto utilizziamo un LM2596, un DCDC converter con Vin tra 10V e 40V e Vout stabilizzata a 5V con tolleranza \(<\)0.1\%, più che sufficente per rispettare la compatibilità con gli Absolute maximum ratings dei nostri componenti (5\(\pm\)0.005V).
+		L'LM2596 per un'efficace stabilizzazione della tensione in uscita disponde di una closed-loop feedback (nel caso in cui questa sia separata da un filtro per esempio), dispone inoltre di un condensatore in ingresso e un filtro in uscita per smorzare eventuali sovra-tensioni (entranti ed uscenti) evitando quindi glitch nell'alimentazioni dei componenti digitali.
 
 	\subsection{Ulteriori Componenti Hardware}
 		\subsubsection{La scheda Piggy-Back}\label{sec:piggy}
-		% Cos'è, perché la usiamo, cenni sul numero di pin sequenziali, compatibilità col Raspberry, montaggio Circuiteria
-		% - Il DCDC, schema e cenni sul closed-loop feedback -> garanzia di Vdd costante
+	Il Piggy-Back è un semplice accessorio per il Raspberry, è collegabile tramite una porta seriale e fondamentalmente funge da breadboard per il Raspberry. E' infatti su questa scheda dove vengono montati tutti i pezzi fin'ora descritti per analisi di test e collaudo.
 
 		\subsubsection{Il Raspberry}\label{sec:rasp}
-		% Massimo 3 righe su cos'è giusto per avere una descrizione a prova di idiota
-		% - Collegamento e comunicazione col Piggy-Back
+	Il Raspberry è un noto microcomputer delle dimensioni di una carta di credito, viene venduto equipaggiato di processore ARMv6/7, scheda grafica e banchi ram integrati. E' un dispositivo poco costoso e di facile impiego per la programmazione di software e circuiti, confidando nella sua notorietà tralasciamo una descrizione più completa e accurata che è comunque disponibile sul sito stesso del produttore.
 
 	\subsection{Il linguaggio di programmazione I2C}\label{sec:i2c}
-	% Breve cenno sull'I2C che viene usato per la comunicazione con la circuiteria
+		I\(^2\)C è l'abbreviazione di \emph{Inter-Integrated Circuit}, più che un vero e proprio linguaggio è un sistema di comunicazione seriale utilizzato tra circuiti integrati. E' caratterizzato dall'uso di sole due linee \emph{SDA} e \emph{SDC} rispettivamente per data e clock, inoltre consente una facile gestione delle linee in \emph{3-state logic} il tutto a scapito di elevate velocità di comunicazione.
+		In I\(^2\)C le linee di comunicazione e controllo sono generalmente di tipo \emph{open-drain} rendendo quindi necessario l'uso di resistenze di \emph{pull-up} per la corretta transizione tra i livelli logici alti e bassi.
+		In Figura \ref{fig:i2c} una schematizzazione molto ridotta del sistema I\(^2\)C.
+		\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\textwidth]{src/i2c}
+		\caption{Schematizzazione I\(^2\)C}\label{fig:i2c}
+		\end{figure}
+
 
 \section{Realizzazione del Progetto}
 		Il progetto è molto semplice. Si tratta di:
 		\begin{itemize}
-		        \item utilizzare il DCDC converter per stabilizzare l'alimentazione dei componenti.
-		        \item portare le piste a degli header in modo che siano accessibili al Raspberry
-		        \item proteggere le linee in ingresso e in uscita in modo che non si danneggino i componenti
+		        \item Utilizzare il DCDC converter per stabilizzare l'alimentazione dei componenti;
+		        \item Portare le piste a degli header in modo che siano accessibili al Raspberry;
+		        \item Proteggere le linee in ingresso e in uscita in modo che non si danneggino i componenti.
 		\end{itemize}
 
 	\subsection{Protezione della componentistica}
-		Si tratta di rispettare le specifiche di absolute maximum ratings, proteggere le linee in ingresso e in uscita da ingressi \textbf{out of range} e \textbf{ridurre i rumori}.
-		In particolare un filtro per i rumori nel caso dell'ADC, un filtro per avere un transitorio non nullo nel caso dei GPIO e in tutti e tre i casi una protezione contro ingressi alti e per rientrare negli Absolute Maximum ratings nel caso di collegamento dei pin di output a massa (caso peggiore).
-		(Vedi lo schematico delle parti: RASP\_GPIO\_DAC\_ADC\_PARTS.pdf)
+		Tutti i componenti descritti fin'ora hanno, ovviamente, dei limiti costruttivi sulle tensioni e le correnti che vi possono fluire. Per rientrare nei parametri massimi consentiti (Absolute Maximum Ratings) dobbiamo realizzare delle protezioni sulle linee in ingresso e in uscita da valori \textbf{out of range} e inoltre per \textbf{ridurre i rumori}.
+		In particolare realizziamo un filtro per i rumori per l'ADC, un filtro per avere un transitorio non nullo nel caso dei GPIO e per tutti e tre i componenti principali (GPIO, ADC e DAC) una protezione contro ingressi troppo alti e per rientrare negli Absolute Maximum ratings nel caso di collegamento dei pin di output a massa (caso peggiore).
+		(Vedasi lo schematico delle parti: RASP\_GPIO\_DAC\_ADC\_PARTS.pdf)
+		
 		\subsubsection{Filtri RC}
 		Abbiamo disegnato due filtri RC:
 		\begin{itemize}
-		        \item Filtro ADC.
-		        \item Filtro GPIO
+		        \item Un filtro per l'ADC;
+		        \item Un filtro per il GPIO.
 		\end{itemize}
-		Si tratta in entrambi i casi di filtri passa basso con 1 unico polo.
+		
+		Si tratta in entrambi i casi di filtri passa basso ad 1 polo.
+		
 			\paragraph{Filtro ADC}
-				L'ADC da specifiche si comporta come un passa basso a 5hz. Nel nostro caso vogliamo aggiungere un ulteriore polo in modo da \textbf{pre-filtrare} il segnale in ingresso.
-				Scegliamo quindi una frequenza di taglio \textbf{\(<\)5Hz} (sopra alla quale in ogni caso il segnale non viene campionato correttamente).
+				L'ADC già di per sé secondo le sue specifiche si comporta come un passa basso a 5hz, nel nostro caso vogliamo aggiungere un ulteriore polo in modo da \textbf{pre-filtrare} il segnale in ingresso.
+				Scegliamo quindi una frequenza di taglio \textbf{\(<\)5Hz} (soglia oltre la quale ogni caso il segnale non verrebbe campionato correttamente).
 				In particolare scegliamo una resistenza da 100k\(\Omega\) e un condensatore da 1\(\mu\)F per avere di conseguenza un taglio a 1.6Hz.
 			\paragraph{Filtro GPIO}
 				Per il GPIO il caso è diverso: ci serve un filtro in modo da evitare false letture dovute a picchi improvvisi e rumore e nel contempo asssicurare una buona reattività nel caso dell'attuazione
 				Dimensioniamo il filtro a partire dalla resistenza che deve soddisfare la massima corrente di drain dal piedino descritta negli \textbf{Absolute Maximum Ratings}.
 				Abbiamo quindi Imax=25mA, Vmax=5V. Rmin deve quindi essere Rmin=200\(\Omega\). La dimensioniamo ad 1k\(\Omega\) e siamo sicuri di essere nei ratings.
-				Scegliamo una C=1\(\mu\)F per avere di conseguenza un taglio a 160Hz. La porta ha quindi una \(\tau\)=1ms di risposta naturale, che è accettabile nel nostro caso perché nel caso peggiore la commutazione del valore binario avviene intorno ai 2ms.
+				Scegliamo una C=1\(\mu\)F per avere di conseguenza un taglio a 160Hz. La porta ha quindi una \(\tau\)=1ms di risposta naturale, che nella nostra applicazione è accetabile in quanto nel caso peggiore la commutazione del valore binario avviene intorno ai 2ms.
 		\subsubsection{Protezioni V e I}
 		Ci serve un sistema per impedire alla tensione di salire oltre ad una certa soglia in modo da non danneggiare i microchip. utilizziamo quindi dei diodi zener che scaricano a massa le tensioni in ingresso.
 		Si noti che le usiamo anche nel caso dei DAC per proteggere la porta nel caso in cui venga collegata erroneamente.
@@ -174,9 +178,32 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 		Il Raspberry ha già integrate delle resistenze di pull-up per il caso in cui lo si colleghi in I\(^2\)C ad altri componenti.
 		Nel caso in cui il segnale sia più pulito con l'alimentazione del bus provvista dal Raspberry, sarà sufficiente dissaldare le R\_pullup e il bus sarà scollegato dalla Vdd fornita dal DCDC.
 
-
+\newpage
+\newgeometry{top=1.5cm,bottom=1.5cm}
 	\subsection{Schema elettrico d'assemblaggio}
+	\begin{figure}[h!]
+		\includepdf[scale=0.9, offset=0 -15]{../PDF_generated/RASP_GPIO_DAC_ADC_2}
+	\end{figure}
+\restoregeometry
 
-
+\section{Appendice}
+\subsection{Appendice A - Scheda tecnica ADC}
+		\includepdf[pages={5},noautoscale=true, offset=0 0]{../Specs/MCP3428}
+		
+\newpage
+\subsection{Appendice B - Scheda tecnica DAC}
+		\includepdf[pages={3},noautoscale=true, offset=0 0]{../Specs/MCP4728}
+		
+\newpage
+\subsection{Appendice C - Scheda tecnica GPIO}
+	\includepdf[pages={23},noautoscale=true, offset=0 0]{../Specs/MCP23008}
+	
+\newpage
+\subsection{Appendice D - Scheda tecnica DCDC}
+	\includepdf[pages={2},noautoscale=true, offset=0 0]{../Specs/LM2596}
+	
+\newpage
+\subsection{Appendice E - Eagle Project parts}
+	\includepdf[pages={1},noautoscale=true, offset=0 0,angle=-90]{../PDF_generated/RASP_GPIO_DAC_ADC_PARTS}
 
 \end{document}
