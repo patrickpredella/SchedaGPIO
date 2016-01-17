@@ -17,6 +17,7 @@
 \usepackage{paralist}
 \usepackage{verbatim}
 \usepackage{subfig}
+\usepackage{wrapfig}
 
 \usepackage{sectsty}
 
@@ -56,22 +57,48 @@ A questo scopo abbiamo deciso di realizzare una scheda composta dai seguenti ele
 		L'ADC è un dispositivo per la conversione di segnali analogici in segnali digitali, i suoi aspetti più importanti sono risoluzione e frequenza di campionamento.
 		La risoluzione è legata al numero di bit di memoria disponibili nel dispositivo e influenza la sua capacità di discernere segnali in ingresso simili tra loro mediante $2^{n-1}$ step di campionamento (con n pari al numeri di bit disponibili). La frequenza di campionamento invece determina in che misura la conversione segua fedelmente l'andamento nel tempo del segnale di ingresso. Come noto dal teorema di Shannon la frequenza di campionamento deve essere almeno più del doppio della frequenza del segnale ingresso, nel caso in esame comunque i segnali di temperatura e pressione essento riferiti a misure ambientali hanno frenquenze molto basse.
 
-		Nel nostro progetto utilizziamo un MCP3428 della Microchip Technology Inc. caratterizzato da una frequenza di lavoro a 100 kHz, 400 kHz o 3.4 MHz (nella nostra applicazione imposteremo 100 kHz) ed una risoluzione a 16bit e 4 canali d'ingresso. In figura \ref{fig:adc} è possibile vedere una schematizzazione a blocchi del funzionamento dell'ADC in uso.
+		Nel nostro progetto utilizziamo un MCP3428 della Microchip Technology Inc. caratterizzato da una frequenza di lavoro a 100 kHz, 400 kHz o 3.4 MHz (nella nostra applicazione imposteremo 100 kHz) ed una risoluzione a 16bit e 4 canali d'ingresso. In Figura \ref{fig:adc} è possibile vedere una schematizzazione a blocchi del funzionamento dell'ADC in uso ed i suoi pin.
 		\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.8\textwidth]{src/adc_block}
-		\caption{Schema a blocchi dell'ADC}\label{fig:adc}
+			\centering
+			\includegraphics[width=0.8\textwidth]{src/adc_block}
+			\caption{Schema a blocchi dell'ADC}\label{fig:adc}
 		\end{figure}
+		
+		L'MCP3428 disponde di una sua Vref interna, modificabile tramite il settagio del PGA mediante la relazione $V_{ref}=V_{ref-base}/PGA$, nello specifico del nostro progetto impostiamo il PGA (Programmable Gain Amplifier) a 1x.
+		
+		
 		\subsubsection{DAC - Digital-to-Analog Converter}\label{sec:dac}
-		% Come per ADC
+		Il DAC è un dispositivo per la conversione di segnali digitali in segnali analogici, è concettualmente l'opposto dell'ADC visto precedentemente.
+		Nel nostro progetto utilizziamo un MCP4728 della Microchip Technology Inc. le cui specifiche tecniche sono comparabili con quelle dell'MCP3428 se non per ilfunzionamento. Dato uno stream di dati in ingresso ne viene ricostruito l'andamento in tensione analogica  mediante un sincronizzatore, quest'ultimo per evitare che la tensione generata abbia un andamento ad impulsi viene affiancato da dei latch di tensione che permettono di realizzare un'andamento continuo di tensione senza sbalzi.
+		In Figura \ref{fig:dac} è possibile vedere una schematizzazione a blocchi del DAC in uso ed i suoi pin.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.8\textwidth]{src/dac_block}
+			\caption{Schema a blocchi del DAC}\label{fig:dac}
+		\end{figure}
 
 		\subsubsection{GP I/O - General Purpose Input/Output Device}\label{sec:gpio}
-		% Come per ADC
+		\begin{wrapfigure}{l}{0.3\textwidth}
+		\vspace{-20pt}
+			\centering
+			\includegraphics[width=0.3\textwidth]{src/gpio_scheme}
+			\caption{Schema del GPIO}\label{fig:gpio}
+			\vspace{-10pt}
+		\end{wrapfigure}
+		Il GP I/O è un dispositivo digitale che disponde di diverse linee che possono fungere sia da canali di input che di output in base ai comandi I\(^2\)C impartiti dal controllore master (nel nostro caso il Raspberry). Il GP I/O permette quindi di trasmettere e ricevere comandi digitali a/da interruttori, attuatori digitali e simili, un esempio pratico può essere il controllo remoto del Raspberry mediante interruttori che possono attivvare/disattivare funzioni pre-programmate, scegliere da quale ADC stare in ascolto, o quale DAC attivare ecc. L'uso di un GP I/O può spaziare a fantasia. Nel nostro progetto utilizziamo un MCP23008 che disponde di 8bit configurabili tramite I\(^2\)C come input/ouput.
 
+		
+		
+\newpage
 		\subsubsection{DCDC Converter}\label{sec:dcdc}
 		Il DCDC è un componente che converte una tensione in continua in un'altra tensione in continua secondo i suoi parametri di datasheet.
 		L'alimentazione verrà formita da un alimentatore da 12VDC. Tuttavia la nostra scheda monta componentistica che richiede una alimentazione a 5VDC. Usiamo quindi un DCDC converter sia per abbassare la tensione a quella desiderata che per eliminare oscillazioni dovute a eventuali picchi in ingresso
-
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.8\textwidth]{src/dcdc_scheme}
+			\caption{Schema del DCDC}\label{fig:dcdc}
+		\end{figure}
+		
 		Utilizziamo il componente LM2596. Un DCDC con Vin tra 10V e 40V e Vout stabilizzata a 5V con tolleranza \(<\)0.1\%, il che è tollerabile con tutti i nostri Absolute maximum ratings (5\(\pm\)0.005V).
 		Questo componente presenta pure una linea di Feedback in modo da poter regolare in closed-loop la tensione in uscita (nel caso in cui questa sia separata da un filtro per esempio).
 		Aggiungiamo quindi un condensatore in ingresso e un filtro in uscita per smorzare le tensioni entranti ed uscenti e quindi evitare eventuali glitch nelle alimentazioni dei componenti digitali.
