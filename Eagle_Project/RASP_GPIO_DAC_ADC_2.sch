@@ -15201,9 +15201,9 @@ Source: www.bourns.com .. 6000_series.pdf</description>
 <part name="V58" library="firefly" deviceset="GND" device=""/>
 <part name="VDD1" library="supply1" deviceset="VDD" device="" value="VDD 12V"/>
 <part name="C_IN" library="rcl" deviceset="CPOL-EU" device="085CS-1AR" value="680uF"/>
-<part name="D53" library="SparkFun-DiscreteSemi" deviceset="DIODE-ZENER" device="5.6V" value=""/>
-<part name="L1" library="rcl" deviceset="L-US" device="0204/5"/>
-<part name="C_OUT" library="rcl" deviceset="CPOL-EU" device="085CS-1AR" value="680uF"/>
+<part name="D53" library="SparkFun-DiscreteSemi" deviceset="DIODE-ZENER" device="5.6V" value="1N5824"/>
+<part name="L1" library="rcl" deviceset="L-US" device="0204/5" value="33uH"/>
+<part name="C_OUT" library="rcl" deviceset="CPOL-EU" device="085CS-1AR" value="220uF"/>
 <part name="SUPPLY11" library="SparkFun-Aesthetics" deviceset="VDD" device=""/>
 <part name="SUPPLY12" library="SparkFun-Aesthetics" deviceset="VDD" device=""/>
 <part name="R_PULLUP_SCL" library="resistor" deviceset="R-EU_" device="0204/2V" value="10K"/>
@@ -15212,9 +15212,9 @@ Source: www.bourns.com .. 6000_series.pdf</description>
 <part name="V62" library="firefly" deviceset="GND" device=""/>
 <part name="VDD2" library="supply1" deviceset="VDD" device="" value="VDD 12V"/>
 <part name="C_IN1" library="rcl" deviceset="CPOL-EU" device="085CS-1AR" value="680uF"/>
-<part name="D58" library="SparkFun-DiscreteSemi" deviceset="DIODE-ZENER" device="5.6V" value=""/>
-<part name="L2" library="rcl" deviceset="L-US" device="0204/5"/>
-<part name="C_OUT1" library="rcl" deviceset="CPOL-EU" device="085CS-1AR" value="680uF"/>
+<part name="D58" library="SparkFun-DiscreteSemi" deviceset="DIODE-ZENER" device="5.6V" value="1N5824"/>
+<part name="L2" library="rcl" deviceset="L-US" device="0204/5" value="33uH"/>
+<part name="C_OUT1" library="rcl" deviceset="CPOL-EU" device="085CS-1AR" value="220uF"/>
 <part name="SUPPLY13" library="SparkFun-Aesthetics" deviceset="VDD" device=""/>
 <part name="R57" library="resistor" deviceset="R-EU_" device="0204/2V" value="1K"/>
 <part name="D59" library="SparkFun-DiscreteSemi" deviceset="DIODE-ZENER" device="5.6V" value="5.1V"/>
